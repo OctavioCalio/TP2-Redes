@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecturas de temperatura</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+<body class="has-background-dark has-text-light">
+    <!-- Navbar -->
+    <nav class="navbar is-link">
+        <div class="navbar-brand">
+            <a class="navbar-item has-text-light" href="#">
+                <strong>Lecturas de temperatura</strong>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main section -->
+    <section class="section">
+        <div class="container">
+            <h1 class="title has-text-centered has-text-light">Lecturas de la ultima semana</h1>
+            <div class="box has-background-grey-darker">
+                <canvas id="chart-container"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+-------------
+DEPENDENCIAS:
+1. node.js
+
+2. express 
+
+3. axios 
+
+4. cors 
+
+5. ws
+
+6. pg
+
+7. jsonwebtoken
+
+8. archivo .env
+
+9. chart.js
+
+
+necesario: serve
+
+
+------------
+INSTALACIÒN:
+
+npm install express axios cors ws pg jsonwebtoken dotenv chart.js
+
+---------
+PROYECTO:
+
+Consta de varios microservicios que forman parte de una aplicación web que genera y muestra lecturas de temperatura. Cada microservicio se conecta al siguiente usando solicitudes HTTP por medio de axios o conexiones WebSocket y cuando es necesario acceder a algún endpoint protegido, se autentifica con JWT
+
+Se constituye por:
+
+- api.js: Contiene la API principal. Tiene el endpoint de login, maneja la autenticación con JWT, crea una tabla en PostgreSQL para almacenar lecturas y define dos endpoints (protegidos con JWT), uno para insertar lecturas de temperatura y otro para obtener las lecturas de temperatura de los últimos 7 días. 
+
+- client.js: Este microservicio genera temperaturas cada 5 segundos por medio de una conexión websocket. Se conecta al servidor websocket que se ejecuta en server.js
+
+- server.js: Este archivo tiene un servidor websocket que recibe los datos que está mandando client.js. Cuando los recibe, los manda al servidor webhook que se ejecuta en webhook.js; usa axios para hacerlo, por medio de una solicitud POST.
+
+- webhook.js: 
+ Este archivo recibe los datos de temperatura enviados por el servidor websocket (server.js); obtiene un token JWT válido realizando una solicitud POST a la api (api.js) en el endpoint /login. 
+ Después reenvía los datos de temperatura a la api.js en el endpoint /temperature-readings, donde tiene que incluir el token de autenticación en el encabezado, porque ese endpoint está protegido por JWT.
+ También tiene un endpoint /token, para que desde el fornt (script.js) se pueda obtener el token JWt y crear el gráfico
+
+- script.js:
+ Este archivo es el frontend de la aplicación web. Se encarga de obtener el token JWT y de dibujar el gráfico de temperaturas. El token jwt lo obtiene de webhook.js en el endpoint /token. 
+ Ese token lo usa para obtener los datos de la api.js en el endpoint /temperature-readings
+ Posteriormente crea el gráfico usando chart.js
+
+ ---------------
+ FLUJO DE DATOS:
+
+Cliente (client/client.js) -> Servidor WebSocket (server/server.js) -> Servidor Webhook (webhook/webhook.js) -> API (api/api.js) -> Base de datos PostgreSQL
+
+----------
+EJECUCIÓN:
+
+Para ejecutarlo hay que moverse a la dirección de cada microservicio y según sea el caso ejecutar: 
+
+node api
+node server
+node webhook
+node client
+
+serve (en el directorio de api.js) 
+
+*serve sirve para levantar un servidor web local y servir los archivos en el directorio específico
+por defecto lo hace en el puerto 3000. 
