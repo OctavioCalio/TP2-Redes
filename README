@@ -22,10 +22,14 @@ DEPENDENCIAS:
 necesario: serve
 
 
+
+
 ------------
 INSTALACIÒN:
 
 npm install express axios cors ws pg jsonwebtoken dotenv chart.js
+
+npm install -g serve
 
 ---------
 PROYECTO:
