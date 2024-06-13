@@ -34,13 +34,13 @@ const port = 5000;
 app.use(express.json());
 
 app.use(cors({
-  origin: '*' // Reemplaza con la URL y puerto donde se está ejecutando 'serve'. * indica desde cualquier origen
+  origin: '*' // * indica desde cualquier origen
 }));
 
 
 
 
-// Definición del middleware verifyToken
+// middleware verifyToken
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
@@ -67,11 +67,11 @@ app.post('/login', (req, res) => {
   const hardcodedUser = {
     username: 'usuario',
     password: 'contraseña'
-  };  //Hardcodeamos el usuario y contraseña para hacer la comparativa y si es correcta, crear el token
+  };  
 
   
   if (username === hardcodedUser.username && password === hardcodedUser.password) {
-    // Generar un token JWT
+    // Generar un token JWT 
     const token = jwt.sign({ username: hardcodedUser.username }, secretKey, { expiresIn: '1h' });
     res.json({ token });
   } else {
@@ -106,14 +106,14 @@ app.get('/temperature-readings', verifyToken, async (req, res) => {
     currentDate.setHours(0, 0, 0, 0);
     let formattedDate = currentDate.toISOString().split('T')[0] + ' 00:00:00';
 
-    //const query = `SELECT * FROM temperature_readings as r where r.timestamp between timestamp '${formattedDate} AND LOCALTIMESTAMP ORDER BY r.timestamp DESC LIMIT 100`;
+    
     const query = `SELECT * FROM temperature_readings as r WHERE r.timestamp >= NOW() - INTERVAL '7 days' ORDER BY r.timestamp DESC`;
     const result = await client.query(query);
     const data = result.rows.reverse();
     const distributedData = getDistributedSamples(data, 100)
     
 
-    // Limitar la cantidad de datos a enviar (por ejemplo, los últimos 100)
+    // Limitar la cantidad de datos a enviar
     const limitedData = distributedData.slice(0, 100);
 
     res.status(200).json({ data: limitedData });
